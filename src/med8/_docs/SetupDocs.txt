@@ -1,0 +1,18 @@
+https://nodejs.org/en/download
+i used the msi installer: node -v / npm -v / npx -v -> should yield the most recent versions
+
+Setup React Web App (note that CRA - Create React App is not maintained anymore and it is suggested to use vite)
+    npm create vite@latest
+
+    npm install
+    npm run dev
+
+Tailwind:
+    npm install -D tailwindcss postcss autoprefixer
+    npx tailwindcss init -p
+
+Extensions:
+    es7 react / redux / react - native
+    tail wind css
+
+    i also installed some wierd path helper for path autocompletion but thats not required i think the only reason i added that was due to CRA not working properly and the project not able to reference any assets proplery - so autocompletion did still not work and in addition when i eventually got the image to be displayed it was under a path that vsc intellisence told me to be invalid
