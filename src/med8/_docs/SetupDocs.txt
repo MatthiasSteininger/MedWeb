@@ -14,5 +14,8 @@ Tailwind:
 Extensions:
     es7 react / redux / react - native
     tail wind css
+	
+	add @tailwinds in the index.css
+	update tailwind.config.js
 
     i also installed some wierd path helper for path autocompletion but thats not required i think the only reason i added that was due to CRA not working properly and the project not able to reference any assets proplery - so autocompletion did still not work and in addition when i eventually got the image to be displayed it was under a path that vsc intellisence told me to be invalid
