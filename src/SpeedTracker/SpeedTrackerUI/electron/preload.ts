@@ -22,3 +22,8 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // You can expose other APTs you need here.
   // ...
 })
+
+// Expose the `readFile` method to the renderer process (main world)
+contextBridge.exposeInMainWorld('electronAddon', {
+  readFile: (filePath: string) => ipcRenderer.invoke('read-file', filePath),
+});
