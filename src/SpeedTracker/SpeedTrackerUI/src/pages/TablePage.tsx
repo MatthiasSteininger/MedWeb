@@ -24,14 +24,16 @@ const TablePage = () => {
   }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Table Display</h1>
-      <button
-        onClick={loadFileContent}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
-      >
-        Parse and Display Data
-      </button>
+    <div className="p-6 px-16 flex flex-col">
+      <div className='flex gap-10'>
+        <h1 className="text-2xl font-bold mb-4">Table Display</h1>
+        <button
+          onClick={loadFileContent}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
+        >
+          Parse and Display Data
+        </button>
+      </div>
 
       {raceResults.length > 0 && (
         <table className="min-w-full bg-white border border-gray-200">

@@ -17,6 +17,7 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, "preload.mjs")
       //was preload.mjs for some reason
+      // devTools: false
     }
   });
   win.webContents.on("did-finish-load", () => {
