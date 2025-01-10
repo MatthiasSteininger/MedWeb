@@ -1,7 +1,8 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { promises } from "node:fs";
 createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 process.env.APP_ROOT = path.join(__dirname, "..");
@@ -15,6 +16,8 @@ function createWindow() {
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
       preload: path.join(__dirname, "preload.mjs")
+      //was preload.mjs for some reason
+      // devTools: false
     }
   });
   win.webContents.on("did-finish-load", () => {
@@ -35,6 +38,14 @@ app.on("window-all-closed", () => {
 app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
+  }
+});
+ipcMain.handle("read-file", async (event, filePath) => {
+  try {
+    const content = await promises.readFile(filePath, "utf-8");
+    return content;
+  } catch (error) {
+    throw new Error("Failed to read file: " + error.message);
   }
 });
 app.whenReady().then(createWindow);

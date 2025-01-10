@@ -1,9 +1,12 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
+import { promises as fs } from 'node:fs'
+//import util from 'node:util' //for promisifying callback based function into async/await
 
 const require = createRequire(import.meta.url)
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // The built directory structure
@@ -30,7 +33,8 @@ function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     webPreferences: {
-      preload: path.join(__dirname, 'preload.mjs'),
+      preload: path.join(__dirname, 'preload.mjs'), //was preload.mjs for some reason
+      // devTools: false
     },
   })
 
@@ -64,5 +68,29 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+//CUSTOM START
+// IPC listener to read file
+ipcMain.handle('read-file', async (event, filePath: string): Promise<string> => {
+  try {
+    //const content: any = await fs.readFile(filePath, () => {}); //couldnt manage to provide utf-8, but had to provide callback even tho i can await ... - i dont understand fully
+    //const content = fs.readFileSync(filePath, 'utf-8');
+    // const content: any = await fs.readFile(filePath, 'utf-8');
+    const content = await fs.readFile(filePath, 'utf-8');
+
+    // await delay(2000);
+    // promise and await is working fine - the only problem was that printing to the website took pretty long
+    // what is also the action that caused the lag
+
+    // console.log("TEST") //is logged to local console - console.log in main world does log to browser console
+
+    return content;
+  } catch (error: any) { //i have to define any -> to conform to typescript for some reason
+    throw new Error('Failed to read file: ' + error.message);
+  }
+});
+//CUSTOM END
 
 app.whenReady().then(createWindow)

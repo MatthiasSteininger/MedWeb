@@ -1,0 +1,36 @@
+{
+   "ID":9,
+   "Bib":4959,
+   "TimingPoint":"START+ZIEL",
+   "Result":-10,
+   "Time":24961.763,
+   "Invalid":false,
+   "Passing":{
+      "Transponder":"",
+      "Position":{
+         "Latitude":0,
+         "Longitude":0,
+         "Altitude":0,
+         "Flag":""
+      },
+      "Hits":44,
+      "RSSI":-59,
+      "Battery":0,
+      "Temperature":0,
+      "WUC":0,
+      "LoopID":0,
+      "Channel":0,
+      "InternalData":"",
+      "StatusFlags":0,
+      "DeviceID":"D-55035",
+      "DeviceName":"D-55035",
+      "OrderID":76847,
+      "Port":0,
+      "IsMarker":false,
+      "FileNo":0,
+      "PassingNo":0,
+      "Customer":0,
+      "Received":"0001-01-01T00:00:00Z",
+      "UTCTime":"0001-01-01T00:00:00Z"
+   }
+}
