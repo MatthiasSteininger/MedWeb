@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 const TablePage = () => {
   const [raceResults, setRaceResults] = useState([]);
+  const [count, setCount] = useState(0);
 
   const loadFileContent = () => {
     const filePath = 'C:\\_GitHUB\\@LVR-P\\MedWeb\\src\\SpeedTracker\\Data\\data1.json';
@@ -9,12 +10,13 @@ const TablePage = () => {
     // Use the `readFile` function exposed via the preload script
     // window.ipcRenderer.invoke('read-file', filePath);
     // window.stone.readFile(filePath);
+    
     window.electronAddon.readFile(filePath).then((content: string) => {
       console.log(content); // Print file content to the console
       // const raceResultsJson = content.substring(0, 400);
       // i also had to trim in order for it to work - i guess the fileend newline
 
-      const raceResultsLines = content.trim().split('\n'); //he was not a fan of \r\n - even tho notepad told me that was the content
+      const raceResultsLines = content.trim().split('\n').slice(0, 100); //he was not a fan of \r\n - even tho notepad told me that was the content
       const localRaceResults: any = raceResultsLines.map((line) => JSON.parse(line)); //like select in linq -> map every json entry (string) to object
       setRaceResults(localRaceResults)
 
@@ -26,7 +28,7 @@ const TablePage = () => {
   return (
     <div className="p-6 px-16 flex flex-col">
       <div className='flex gap-10'>
-        <h1 className="text-2xl font-bold mb-4">Table Display</h1>
+        <h1 className="text-2xl font-bold mb-4" onClick={() => setCount(count + 1)}>Table Display {count}</h1>
         <button
           onClick={loadFileContent}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"

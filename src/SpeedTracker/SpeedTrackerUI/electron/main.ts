@@ -69,7 +69,7 @@ app.on('activate', () => {
   }
 })
 
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+// const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 //CUSTOM START
 // IPC listener to read file

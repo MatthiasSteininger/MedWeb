@@ -16,6 +16,11 @@ const App = () => {
           <Route path="/table" element={<TablePage />} />
           <Route path="/grid" element={<GridPage />} />
         </Routes>
+
+        {/* <div className='h-20 flex flex-row gap-6'>
+          <a className='text-red-800 p-5'>alöskdfjalö skd alöskdfjalöasd</a>
+          <a className='text-blue-800 p-2'>alöskdfjalö skd alöskdfjalöasd</a>
+        </div> */}
       </div>
     </Router>
   );
