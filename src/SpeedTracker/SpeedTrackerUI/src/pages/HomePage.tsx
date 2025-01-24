@@ -5,9 +5,9 @@ const HomePage = () => {
   return (
     <div className="bg-gradient-to-r from-blue-500 to-teal-400 flex flex-col items-center justify-center space-y-4 p-4 flex-grow">
       <div className="text-left space-y-4">
-        <h1 className="text-5xl font-bold text-white">Welcome to SpeedTracker</h1>
+        <h1 className="text-5xl font-bold text-white">SpeedTracker</h1>
         <p className="text-xl text-white">
-          Track and manage your data effortlessly with SpeedTracker.
+          SpeedTracker für die BerufsfeuerwehrLinz.
         </p>
         <div className="space-x-4">
           <Link to="/table">

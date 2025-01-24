@@ -1,27 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const TablePage = () => {
-  const [raceResults, setRaceResults] = useState([]);
+  // Initialize state from localStorage or empty array
+  const [raceResults, setRaceResults] = useState(() => {
+    const savedResults = localStorage.getItem('raceResults');
+    return savedResults ? JSON.parse(savedResults) : [];
+  });
+
+  useEffect(() => {
+    // Speichert den Zustand von raceResults im localStorage, wenn sich der Zustand ändert
+    if (raceResults.length > 0) {
+      localStorage.setItem('raceResults', JSON.stringify(raceResults));
+    }
+  }, [raceResults]);
 
   const loadFileContent = () => {
-    const filePath = 'C:\\_GitHUB\\@LVR-P\\MedWeb\\src\\SpeedTracker\\Data\\data1.json';
+    const filePath = 'C:\\_repos\\MedWeb\\src\\SpeedTracker\\Data\\data1.json';
 
-    // Use the `readFile` function exposed via the preload script
-    // window.ipcRenderer.invoke('read-file', filePath);
-    // window.stone.readFile(filePath);
     window.electronAddon.readFile(filePath).then((content: string) => {
-      console.log(content); // Print file content to the console
-      // const raceResultsJson = content.substring(0, 400);
-      // i also had to trim in order for it to work - i guess the fileend newline
-
-      const raceResultsLines = content.trim().split('\n'); //he was not a fan of \r\n - even tho notepad told me that was the content
-      const localRaceResults: any = raceResultsLines.map((line) => JSON.parse(line)); //like select in linq -> map every json entry (string) to object
-      setRaceResults(localRaceResults)
-
+      const raceResultsLines = content.trim().split('\n').slice(0, 200);
+      const localRaceResults: any = raceResultsLines.map((line) => JSON.parse(line));
+      setRaceResults(localRaceResults);
     }).catch((error: Error) => {
       console.error('Error reading file:', error);
-    })
-  }
+    });
+  };
+
+  const clearTable = () => {
+    setRaceResults([]);  // Leert die Tabelle, indem der Zustand auf ein leeres Array gesetzt wird
+    localStorage.removeItem('raceResults');  // Entfernt die Daten aus dem localStorage
+    console.log('Table cleared');
+  };
 
   return (
     <div className="p-6 px-16 flex flex-col">
@@ -32,6 +41,13 @@ const TablePage = () => {
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
         >
           Parse and Display Data
+        </button>
+
+        <button 
+          onClick={clearTable}
+          className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4'
+        >
+          Delete Data
         </button>
       </div>
 
@@ -49,8 +65,8 @@ const TablePage = () => {
             </tr>
           </thead>
           <tbody>
-            {raceResults.map((item: any, index) => (
-              <tr key={index} className="border-t">
+            {raceResults.map((item: any, index: number) => (
+              <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'} border-t`}>
                 <td className='py-2 px-4 border'>{index + 1}</td>
                 <td className="py-2 px-4 border">{item.ID}</td>
                 <td className="py-2 px-4 border">{item.Bib}</td>

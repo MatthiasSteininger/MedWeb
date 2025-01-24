@@ -1,13 +1,23 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { FaHome } from 'react-icons/fa'; 
 
 function Navbar() {
-  const navigate = useNavigate(); // Use the useNavigate hook
+  const navigate = useNavigate();
+  const location = useLocation(); 
+                              
+  if (location.pathname === '/') {
+    return <>
+    </>
+  }
 
   return (
     <nav className="bg-gray-800 w-full p-4 px-12 flex justify-between items-center h-auto">
-      <div className="text-white text-2xl font-bold cursor-pointer hover:text-gray-300" onClick={() => navigate('/')}>
-        SpeedTracker
+      <div
+        className="text-white text-2xl font-bold cursor-pointer hover:text-gray-300 flex items-center"
+        onClick={() => navigate('/')}
+      >    
+        <FaHome /> 
       </div>
     </nav>
   );
