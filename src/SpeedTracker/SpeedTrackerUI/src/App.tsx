@@ -4,7 +4,7 @@ import TablePage from './pages/TablePage';
 import GridPage from './pages/GridPage';
 import HomePage from './pages/HomePage';
 import Navbar from './components/Navbar';
-//import { RaceResultsProvider } from './RaceResultsContext';
+import { RaceResultsProvider } from './components/RaceResultContext';
 
 const App = () => {
   return (
