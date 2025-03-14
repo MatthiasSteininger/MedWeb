@@ -1,23 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Flame, Table, Users } from 'lucide-react';
 
 const HomePage = () => {
   return (
-    <div className="bg-gradient-to-r from-blue-500 to-teal-400 flex flex-col items-center justify-center space-y-4 p-4 flex-grow">
-      <div className="text-left space-y-4">
-        <h1 className="text-5xl font-bold text-white">SpeedTracker</h1>
-        <p className="text-xl text-white">
-          SpeedTracker für die BerufsfeuerwehrLinz.
-        </p>
-        <div className="space-x-4">
+    <div className="bg-gradient-to-r from-red-800 to-red-500 flex flex-col items-center justify-center h-screen p-6 text-white">
+      <div className="text-center space-y-6">
+        <Flame className="w-16 h-16 text-yellow-400 animate-pulse" />
+        <h1 className="text-6xl font-extrabold drop-shadow-lg">SpeedTracker</h1>
+        <p className="text-xl font-medium">Die Laufzeitmessung für die Berufsfeuerwehr Linz.</p>
+        
+        <div className="flex space-x-6 mt-4">
           <Link to="/table">
-            <button className="bg-white text-blue-500 px-4 py-2 rounded-lg shadow-md font-semibold hover:bg-blue-200 transition duration-300">
-              View Table
+            <button className="flex items-center gap-2 bg-black text-white px-6 py-3 rounded-lg shadow-lg font-bold text-lg hover:bg-gray-800 transition duration-300">
+              <Table className="w-5 h-5" /> Ergebnis-Tabelle
             </button>
           </Link>
+          
           <Link to="/grid">
-            <button className="bg-white text-teal-500 px-4 py-2 rounded-lg shadow-md font-semibold hover:bg-blue-200 transition duration-300">
-              View Grid
+            <button className="flex items-center gap-2 bg-black text-white px-6 py-3 rounded-lg shadow-lg font-bold text-lg hover:bg-gray-800 transition duration-300">
+              <Users className="w-5 h-5" /> Läuferübersicht
             </button>
           </Link>
         </div>
