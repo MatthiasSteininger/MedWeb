@@ -13,6 +13,8 @@ import { loadFileContent } from './utils/helper';
 import { raceResultsSliceAction } from './utils/raceResultsSlice';
 
 //npm run build
+//note that i "unstricted" some tsconfig linting things - so i can run the command even if e.g. a variable is not used (a bit to strict in my oppinion)
+
 //npx electron-packager . SpeedTrackerUI_v1.0.0  --platform=win32 --arch=x64 --icon=assets/icon.ico --overwrite
 
 const BackgroundJobs = ({ children }: any) =>
