@@ -16,6 +16,8 @@ const TablePage = () => {
     Invalid: '',
   });
 
+  const [showConfirmation, setShowConfirmation] = useState(false); // Zustand für das Bestätigungsfenster
+
   const loadFileContent = () => {
     const filePath = 'C:\\_repos\\MedWeb\\src\\SpeedTracker\\Data\\richtigeData.json';
 
@@ -36,6 +38,7 @@ const TablePage = () => {
   const clearTable = () => {
     setRaceResults([]);
     localStorage.removeItem('raceResults');
+    setShowConfirmation(false); // Bestätigungsfenster nach dem Löschen schließen
   };
 
   const exportToExcel = () => {
@@ -75,7 +78,10 @@ const TablePage = () => {
         <button onClick={loadFileContent} className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded shadow">
           Daten laden
         </button>
-        <button onClick={clearTable} className="bg-red-600 hover:bg-red-600 text-white font-bold py-2 px-4 rounded shadow flex items-center gap-2">
+        <button
+          onClick={() => setShowConfirmation(true)} // Bestätigungsfenster anzeigen
+          className="bg-red-600 hover:bg-red-600 text-white font-bold py-2 px-4 rounded shadow flex items-center gap-2"
+        >
           <FaTrash /> Löschen
         </button>
         {raceResults.length > 0 && (
@@ -123,6 +129,28 @@ const TablePage = () => {
             ))}
           </tbody>
         </table>
+      )}
+
+      {showConfirmation && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-gray-900 text-white p-6 rounded-lg shadow-lg">
+            <h3 className="text-lg font-bold mb-4">Möchten Sie wirklich löschen?</h3>
+            <div className="flex gap-4">
+              <button
+                onClick={clearTable}
+                className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Ja, löschen
+              </button>
+              <button
+                onClick={() => setShowConfirmation(false)} 
+                className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Abbrechen
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

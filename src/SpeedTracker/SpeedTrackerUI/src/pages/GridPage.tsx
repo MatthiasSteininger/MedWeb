@@ -16,36 +16,54 @@ const GridPage = () => {
     return `${minutes}:${formattedSeconds}`;
   };
 
+  // Funktion zum Umrechnen von kumulierten Zeiten in Rundenzeiten
+  const convertCumulativeToLapTimes = (cumulativeTimes: string | any[]) => {
+    const lapTimes = [];
+    for (let i = 0; i < cumulativeTimes.length; i++) {
+      if (i === 0) {
+        lapTimes.push(cumulativeTimes[i]); // Erste Zeit bleibt gleich
+      } else {
+        lapTimes.push(cumulativeTimes[i] - cumulativeTimes[i - 1]); // Differenz berechnen
+      }
+    }
+    return lapTimes;
+  };
+
   const calculateStatistics = (results: any[]) => {
-    const bibStats: Record<string, { times: number[]; totalRounds: number }> = {};
+    const bibStats = {};
 
     results.forEach((item) => {
       if (!bibStats[item.Bib]) {
         bibStats[item.Bib] = { times: [], totalRounds: 0 };
       }
 
-      // Die Zeit für jede Runde wird separat als Zeit pro Runde gespeichert
-      const timeInSeconds = item.Time; // Zeit der aktuellen Runde in Sekunden
-      if (!isNaN(timeInSeconds)) {
-        bibStats[item.Bib].times.push(timeInSeconds); // Zeit pro Runde hinzufügen
-        bibStats[item.Bib].totalRounds += 1; // Erhöhe die Anzahl der Runden
+      // Die Zeiten sind hier kumuliert
+      const cumulativeTimeInSeconds = item.Time;
+
+      if (!isNaN(cumulativeTimeInSeconds)) {
+        bibStats[item.Bib].times.push(cumulativeTimeInSeconds);
       }
     });
 
-    // Umwandlung in eine übersichtliche Statistik
+    // Kumulierte Zeiten in Rundenzeiten umwandeln
+    Object.keys(bibStats).forEach((bib) => {
+      const cumulativeTimes = bibStats[bib].times;
+      bibStats[bib].times = convertCumulativeToLapTimes(cumulativeTimes); // Umwandeln
+      bibStats[bib].totalRounds = cumulativeTimes.length;
+    });
+
     return Object.keys(bibStats).map((bib) => {
       const times = bibStats[bib].times;
       const totalRounds = bibStats[bib].totalRounds;
 
-      // Durchschnittliche Zeit berechnen
-      const averageTime =  times.length > 0 ? (Math.max(...times)) / totalRounds : 0;
+      const averageTime = times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.length : 0;
 
       return {
         Bib: bib,
-        Times: times.map((time) => formatTime(time)).join(', '), // Formatierte Rundenzeiten
+        Times: times.map((time: any) => formatTime(time)).join(', '),
         Fastest: times.length > 0 ? formatTime(Math.min(...times)) : 'N/A',
         Slowest: times.length > 0 ? formatTime(Math.max(...times)) : 'N/A',
-        Average: times.length > 0 ? formatTime(averageTime) : 'N/A', // Durchschnittliche Zeit
+        Average: times.length > 0 ? formatTime(averageTime) : 'N/A',
         TotalRounds: totalRounds,
       };
     });
@@ -78,10 +96,10 @@ const GridPage = () => {
   const exportToExcel = () => {
     const formattedResults = bibStatistics.map(stat => ({
       'Bib': stat.Bib,
-      'Times': stat.Times, // Formatierte Zeiten
+      'Times': stat.Times,
       'Fastest': stat.Fastest,
       'Slowest': stat.Slowest,
-      'Average': stat.Average, // Durchschnittliche Zeit
+      'Average': stat.Average,
       'Total Rounds': stat.TotalRounds
     }));
 
@@ -118,7 +136,7 @@ const GridPage = () => {
               <p>Zeiten: {stat.Times}</p>
               <p>Schnellste Zeit: {stat.Fastest}</p>
               <p>Langsamste Zeit: {stat.Slowest}</p>
-              <p>Durchschnittliche Zeit: {stat.Average}</p> {/* Anzeige der durchschnittlichen Zeit */}
+              <p>Durchschnittliche Zeit: {stat.Average}</p>
               <p>Rundenanzahl: {stat.TotalRounds}</p>
             </div>
           ))
