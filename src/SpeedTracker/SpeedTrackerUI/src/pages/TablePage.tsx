@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { FaFileExcel } from 'react-icons/fa';
 import * as XLSX from 'xlsx';
-import { FaFileExcel, FaTrash, FaFire } from 'react-icons/fa';
-import { RaceResult, raceResultsSliceAction } from '../utils/raceResultsSlice';
-import { useAppDispatch, useAppSelector } from '../utils/store';
-import { loadFileContent } from '../utils/helper';
 import OptionsBar from '../components/OptionsBar';
+import { RaceResult } from '../utils/raceResultsSlice';
+import { useAppSelector } from '../utils/store';
 
 const TablePage = () =>
 {

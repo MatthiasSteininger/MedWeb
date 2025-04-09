@@ -1,66 +1,51 @@
-import { app, BrowserWindow, ipcMain } from "electron";
-import { createRequire } from "node:module";
-import { fileURLToPath } from "node:url";
-import path from "node:path";
-import { promises } from "node:fs";
-createRequire(import.meta.url);
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-process.env.APP_ROOT = path.join(__dirname, "..");
-const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
-const MAIN_DIST = path.join(process.env.APP_ROOT, "dist-electron");
-const RENDERER_DIST = path.join(process.env.APP_ROOT, "dist");
-process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, "public") : RENDERER_DIST;
-let win;
-function createWindow() {
-  win = new BrowserWindow({
-    icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
+import { app as n, BrowserWindow as i, ipcMain as a } from "electron";
+import { createRequire as m } from "node:module";
+import { fileURLToPath as f } from "node:url";
+import e from "node:path";
+import { promises as s } from "node:fs";
+m(import.meta.url);
+const c = e.dirname(f(import.meta.url));
+process.env.APP_ROOT = e.join(c, "..");
+const r = process.env.VITE_DEV_SERVER_URL, j = e.join(process.env.APP_ROOT, "dist-electron"), l = e.join(process.env.APP_ROOT, "dist");
+process.env.VITE_PUBLIC = r ? e.join(process.env.APP_ROOT, "public") : l;
+let o;
+function d() {
+  o = new i({
+    icon: e.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
-      preload: path.join(__dirname, "preload.mjs")
+      preload: e.join(c, "preload.mjs")
       //was preload.mjs for some reason
       // devTools: false
     }
-  });
-  win.webContents.on("did-finish-load", () => {
-    win == null ? void 0 : win.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());
-  });
-  if (VITE_DEV_SERVER_URL) {
-    win.loadURL(VITE_DEV_SERVER_URL);
-  } else {
-    win.loadFile(path.join(RENDERER_DIST, "index.html"));
-  }
+  }), o.webContents.on("did-finish-load", () => {
+    o == null || o.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());
+  }), r ? o.loadURL(r) : o.loadFile(e.join(l, "index.html"));
 }
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-    win = null;
-  }
+n.on("window-all-closed", () => {
+  process.platform !== "darwin" && (n.quit(), o = null);
 });
-app.on("activate", () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
+n.on("activate", () => {
+  i.getAllWindows().length === 0 && d();
 });
-ipcMain.handle("read-file", async (event) => {
+a.handle("read-file", async (p) => {
   try {
-    const filePath = path.join(app.getAppPath(), "data", "richtigeData.json");
-    ;
-    const content = await promises.readFile(filePath, "utf-8");
-    return content;
-  } catch (error) {
-    throw new Error("Failed to read file: " + error.message);
+    const t = e.join(n.getAppPath(), "data", "richtigeData.json");
+    return await s.readFile(t, "utf-8");
+  } catch (t) {
+    throw new Error("Failed to read file: " + t.message);
   }
 });
-ipcMain.handle("rm-file", async (event) => {
+a.handle("rm-file", async (p) => {
   try {
-    const filePath = path.join(app.getAppPath(), "data", "richtigeData.json");
-    await promises.rm(filePath);
-  } catch (error) {
-    throw new Error("Failed to read file: " + error.message);
+    const t = e.join(n.getAppPath(), "data", "richtigeData.json");
+    await s.rm(t);
+  } catch (t) {
+    throw new Error("Failed to read file: " + t.message);
   }
 });
-app.whenReady().then(createWindow);
+n.whenReady().then(d);
 export {
-  MAIN_DIST,
-  RENDERER_DIST,
-  VITE_DEV_SERVER_URL
+  j as MAIN_DIST,
+  l as RENDERER_DIST,
+  r as VITE_DEV_SERVER_URL
 };

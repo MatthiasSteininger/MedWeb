@@ -16,9 +16,9 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noUnusedLocals": false, //custom matthias
+    "noUnusedParameters": false, //custom matthias
+    "noFallthroughCasesInSwitch": false, //custom matthias
   },
   "include": ["src", "electron"],
   "references": [{ "path": "./tsconfig.node.json" }]

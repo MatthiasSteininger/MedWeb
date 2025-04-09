@@ -1,6 +1,5 @@
-import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { FaHome } from 'react-icons/fa'; 
+import { FaHome } from 'react-icons/fa';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function Navbar() {
   const navigate = useNavigate();

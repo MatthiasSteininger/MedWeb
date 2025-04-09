@@ -1,4 +1,7 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom'; 
+//HashRouter instead of BrowserRouter which seems to not work using packaged electron build
+//I do asume that is because the browser does not fetch pages from a socket but rather render the pages directly - which is why file locations are used and no loopback address routes like 127.0.0.1
+
 import TablePage from './pages/TablePage';
 import GridPage from './pages/GridPage';
 import HomePage from './pages/HomePage';
@@ -9,6 +12,7 @@ import { useEffect } from 'react';
 import { loadFileContent } from './utils/helper';
 import { raceResultsSliceAction } from './utils/raceResultsSlice';
 
+//npm run build
 //npx electron-packager . SpeedTrackerUI_v1.0.0  --platform=win32 --arch=x64 --icon=assets/icon.ico --overwrite
 
 const BackgroundJobs = ({ children }: any) =>
@@ -41,7 +45,7 @@ const App = () =>
   return (
     <Provider store={reduxStore}>
       <BackgroundJobs>
-        <Router>
+        <Router basename='/'>
           <div className="flex flex-col min-h-screen">
             <Navbar />
             <Routes>
