@@ -21,5 +21,6 @@ electron.contextBridge.exposeInMainWorld("ipcRenderer", {
   // ...
 });
 electron.contextBridge.exposeInMainWorld("electronAddon", {
-  readFile: (filePath) => electron.ipcRenderer.invoke("read-file", filePath)
+  readFile: (filePath) => electron.ipcRenderer.invoke("read-file", filePath),
+  rmFile: (filePath) => electron.ipcRenderer.invoke("rm-file", filePath)
 });

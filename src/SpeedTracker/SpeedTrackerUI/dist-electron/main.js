@@ -40,10 +40,20 @@ app.on("activate", () => {
     createWindow();
   }
 });
-ipcMain.handle("read-file", async (event, filePath) => {
+ipcMain.handle("read-file", async (event) => {
   try {
+    const filePath = path.join(app.getAppPath(), "data", "richtigeData.json");
+    ;
     const content = await promises.readFile(filePath, "utf-8");
     return content;
+  } catch (error) {
+    throw new Error("Failed to read file: " + error.message);
+  }
+});
+ipcMain.handle("rm-file", async (event) => {
+  try {
+    const filePath = path.join(app.getAppPath(), "data", "richtigeData.json");
+    await promises.rm(filePath);
   } catch (error) {
     throw new Error("Failed to read file: " + error.message);
   }

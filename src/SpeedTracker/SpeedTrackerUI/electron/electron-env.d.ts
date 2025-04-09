@@ -25,6 +25,7 @@ declare namespace NodeJS {
 interface Window {
   ipcRenderer: import('electron').IpcRenderer
   electronAddon: {
-    readFile: (filePath: string) => Promise<string>; //is just a type definition like the IpcRenderer
+    readFile: () => Promise<string>; //is just a type definition like the IpcRenderer
+    rmFile: () => Promise;
   };
 }

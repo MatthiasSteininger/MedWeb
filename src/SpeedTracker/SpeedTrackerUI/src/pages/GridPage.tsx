@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 import { FaFileExcel, FaTrash, FaFire } from 'react-icons/fa';
+import { app } from 'electron';
+import { useAppDispatch, useAppSelector } from '../utils/store';
+import { raceResultsSliceAction } from '../utils/raceResultsSlice';
+import { loadFileContent } from '../utils/helper';
 
 const GridPage = () => {
-  const [raceResults, setRaceResults] = useState(() => {
-    const savedResults = localStorage.getItem('raceResults');
-    return savedResults ? JSON.parse(savedResults) : [];
-  });
+  const dispatch = useAppDispatch();
+  const raceResultsSliceReducer = useAppSelector(state => state.raceResultsSliceReducer);
+
+  const raceResults = raceResultsSliceReducer.raceResults ?? [];
 
   // Funktion zum Formatieren der Zeit in Minuten und Sekunden
   const formatTime = (seconds: number) => {
@@ -30,7 +34,7 @@ const GridPage = () => {
   };
 
   const calculateStatistics = (results: any[]) => {
-    const bibStats = {};
+    const bibStats: any = {};
 
     results.forEach((item) => {
       if (!bibStats[item.Bib]) {
@@ -56,7 +60,7 @@ const GridPage = () => {
       const times = bibStats[bib].times;
       const totalRounds = bibStats[bib].totalRounds;
 
-      const averageTime = times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.length : 0;
+      const averageTime = times.length > 0 ? times.reduce((a: any, b: any) => a + b, 0) / times.length : 0;
 
       return {
         Bib: bib,
@@ -70,28 +74,6 @@ const GridPage = () => {
   };
 
   const bibStatistics = calculateStatistics(raceResults);
-
-  const loadFileContent = () => {
-    const filePath = 'C:\\_repos\\MedWeb\\src\\SpeedTracker\\Data\\richtigeData.json';
-
-    window.electronAddon
-      .readFile(filePath)
-      .then((content) => {
-        const raceResultsLines = content.trim().split('\n').slice(0, 200);
-        const localRaceResults = raceResultsLines.map((line) => JSON.parse(line));
-
-        localStorage.setItem('raceResults', JSON.stringify(localRaceResults));
-        setRaceResults(localRaceResults);
-      })
-      .catch((error) => {
-        console.error('Error reading file:', error);
-      });
-  };
-
-  const clearTable = () => {
-    setRaceResults([]);
-    localStorage.removeItem('raceResults');
-  };
 
   const exportToExcel = () => {
     const formattedResults = bibStatistics.map(stat => ({
@@ -115,10 +97,13 @@ const GridPage = () => {
         <h1 className="text-3xl font-extrabold text-red-500 flex items-center gap-2">
           <FaFire /> Läufer Übersicht
         </h1>
-        <button onClick={loadFileContent} className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded shadow">
+        <button onClick={() => loadFileContent().then((res) => dispatch(raceResultsSliceAction.setRaceResults(res)))} className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded shadow">
           Daten laden
         </button>
-        <button onClick={clearTable} className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded shadow flex items-center gap-2">
+        <button onClick={() => {
+          dispatch(raceResultsSliceAction.setRaceResults([]));
+          window.electronAddon.rmFile();
+        }} className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded shadow flex items-center gap-2">
           <FaTrash /> Löschen
         </button>
         <button onClick={exportToExcel} className="bg-green-600 hover:bg-green-800 text-white font-bold py-2 px-4 rounded shadow flex items-center gap-2">

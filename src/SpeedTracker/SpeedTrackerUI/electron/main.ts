@@ -73,11 +73,13 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 //CUSTOM START
 // IPC listener to read file
-ipcMain.handle('read-file', async (event, filePath: string): Promise<string> => {
+ipcMain.handle('read-file', async (event): Promise<string> => {
   try {
     //const content: any = await fs.readFile(filePath, () => {}); //couldnt manage to provide utf-8, but had to provide callback even tho i can await ... - i dont understand fully
     //const content = fs.readFileSync(filePath, 'utf-8');
     // const content: any = await fs.readFile(filePath, 'utf-8');
+    
+    const filePath: string = path.join(app.getAppPath(), "data", "richtigeData.json");;
     const content = await fs.readFile(filePath, 'utf-8');
 
     // await delay(2000);
@@ -89,6 +91,16 @@ ipcMain.handle('read-file', async (event, filePath: string): Promise<string> => 
     return content;
   } catch (error: any) { //i have to define any -> to conform to typescript for some reason
     throw new Error('Failed to read file: ' + error.message);
+  }
+});
+
+ipcMain.handle("rm-file", async (event) => {
+  try {
+    const filePath = path.join(app.getAppPath(), "data", "richtigeData.json");
+    
+    await fs.rm(filePath);
+  } catch (error: any) {
+    throw new Error("Failed to read file: " + error.message);
   }
 });
 //CUSTOM END
