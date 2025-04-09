@@ -4,11 +4,11 @@ import { FaFileExcel, FaTrash, FaFire } from 'react-icons/fa';
 import { RaceResult, raceResultsSliceAction } from '../utils/raceResultsSlice';
 import { useAppDispatch, useAppSelector } from '../utils/store';
 import { loadFileContent } from '../utils/helper';
+import OptionsBar from '../components/OptionsBar';
 
-const TablePage = () => {
-  const dispatch = useAppDispatch();
+const TablePage = () =>
+{
   const raceResultsSliceReducer = useAppSelector(state => state.raceResultsSliceReducer);
-
   const raceResults = raceResultsSliceReducer.raceResults ?? [];
 
   const [filters, setFilters] = useState<any>({
@@ -19,25 +19,25 @@ const TablePage = () => {
     Invalid: '',
   });
 
-  const [showConfirmation, setShowConfirmation] = useState(false);
-
-  const calculateRoundCounters = (results: any[]) => {
+  const calculateRoundCounters = (results: any[]) =>
+  {
     const bibCounts: any = {};
-    return results.map((item) => {
+    return results.map((item) =>
+    {
       bibCounts[item.Bib] = (bibCounts[item.Bib] || 0) + 1;
       return { ...item, RoundCounter: bibCounts[item.Bib] };
     });
   };
 
   const processedResults = calculateRoundCounters(raceResults);
-
   const filteredResults = processedResults.filter((item) =>
     Object.keys(filters).every((key) =>
       filters[key] ? item[key]?.toString().includes(filters[key]) : true
     )
   );
 
-  const exportToExcel = (raceResults: RaceResult[]) => {
+  const exportAllToExcel = (raceResults: RaceResult[]) =>
+  {
     const ws = XLSX.utils.json_to_sheet(raceResults);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Results');
@@ -46,25 +46,13 @@ const TablePage = () => {
 
   return (
     <div className="p-6 px-16 flex flex-col bg-gray-900 min-h-screen text-white">
-      <div className="flex gap-6 items-center mb-6">
-        <h1 className="text-3xl font-extrabold text-red-500 flex items-center gap-2">
-          <FaFire /> Feuerwehr Rennübersicht
-        </h1>
-        <button onClick={() => loadFileContent().then((res) => dispatch(raceResultsSliceAction.setRaceResults(res)))} className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded shadow">
-          Daten laden
-        </button>
+      <OptionsBar title={"Feuerwehr Rennübersicht"} excelButton={
         <button
-          onClick={() => setShowConfirmation(true)} // Bestätigungsfenster anzeigen
-          className="bg-red-600 hover:bg-red-600 text-white font-bold py-2 px-4 rounded shadow flex items-center gap-2"
-        >
-          <FaTrash /> Löschen
+          onClick={() => exportAllToExcel(raceResults)}
+          className="bg-green-600 hover:bg-green-800 text-white font-bold py-2 px-4 rounded shadow flex items-center gap-2">
+          <FaFileExcel /> Alles Exportieren
         </button>
-        {raceResults.length > 0 && (
-          <button onClick={() => exportToExcel(raceResults)} className="bg-green-600 hover:bg-green-800 text-white font-bold py-2 px-4 rounded shadow flex items-center gap-2">
-            <FaFileExcel /> Exportieren
-          </button>
-        )}
-      </div>
+      }></OptionsBar>
 
       <div className="flex gap-4 mb-4">
         {Object.keys(filters).map((key) => (
@@ -74,7 +62,8 @@ const TablePage = () => {
             name={key}
             placeholder={`Filter nach ${key}`}
             value={filters[key]}
-            onChange={(e: { target: { name: any; value: any; }; }) => {
+            onChange={(e: { target: { name: any; value: any; }; }) =>
+            {
               const { name, value } = e.target;
               setFilters({ ...filters, [name]: value });
             }}
@@ -107,32 +96,6 @@ const TablePage = () => {
             ))}
           </tbody>
         </table>
-      )}
-
-      {showConfirmation && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-gray-900 text-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-lg font-bold mb-4">Möchten Sie wirklich löschen?</h3>
-            <div className="flex gap-4">
-              <button
-                onClick={() => {
-                  dispatch(raceResultsSliceAction.setRaceResults([]));
-                  window.electronAddon.rmFile();
-                  setShowConfirmation(false);
-                }}
-                className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-              >
-                Ja, löschen
-              </button>
-              <button
-                onClick={() => setShowConfirmation(false)}
-                className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
-              >
-                Abbrechen
-              </button>
-            </div>
-          </div>
-        </div>
       )}
     </div>
   );

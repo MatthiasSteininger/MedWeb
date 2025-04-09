@@ -12,8 +12,10 @@ export type RaceResult = {
 
 const initialState: {
     raceResults: RaceResult[] | null
+    isAutoReload: boolean
 } = {
-    raceResults: null
+    raceResults: null,
+    isAutoReload: false
 };
 
 const raceResultsSlice = createSlice({
@@ -21,6 +23,7 @@ const raceResultsSlice = createSlice({
     initialState,
     reducers: {
         setRaceResults: (state, action: PayloadAction<RaceResult[]>) => { state.raceResults = action.payload; },
+        setIsAutoReload: (state, action: PayloadAction<boolean>) => { state.isAutoReload = action.payload; },
     },
 });
 
